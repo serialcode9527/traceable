@@ -2,7 +2,7 @@ return {
     default = {
         ROOT = { "spec" },
         lpath = "./?.lua",
-        output = "plainTerminal",
+        output = "utfTerminal",
         verbose = true,
     }
 }

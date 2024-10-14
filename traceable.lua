@@ -224,19 +224,21 @@ local function _commit(keep_dirty, t, sub, changed, newestversion, lastversion, 
     local trace = sub._lastversion
 
     local has_changed = next(traced) ~= nil
+    local has_inner_changed = false
     for k, v in next, sub._stage do
+        has_inner_changed = false
         if _M.is(v) and not v.ignored then
             if v.opaque then
-                has_changed = _commit(keep_dirty, t, v)
-                if has_changed then
+                has_inner_changed = _commit(keep_dirty, t, v)
+                if has_inner_changed then
                     if changed then
                         changed[k] = true
                     end
                 end
             else
                 local c, n, l = changed and {}, newestversion and {}, lastversion and {}
-                has_changed = _commit(keep_dirty, t, v, c, n, l, map and map[k], mapped)
-                if has_changed then
+                has_inner_changed = _commit(keep_dirty, t, v, c, n, l, map and map[k], mapped)
+                if has_inner_changed then
                     if changed then
                         changed[k] = c
                     end
@@ -248,7 +250,10 @@ local function _commit(keep_dirty, t, sub, changed, newestversion, lastversion, 
                     end
                 end
             end
-            if has_changed and map then
+            if has_inner_changed then
+                has_changed = true
+            end
+            if has_inner_changed and map then
                 local stub = get_map_stub(map, k)
                 if stub then
                     do_map(t, stub, mapped)
