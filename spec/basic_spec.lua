@@ -1,4 +1,5 @@
 local traceable = require("traceable")
+local unpack = table.unpack
 
 describe("basic tests -", function()
     local match = require("luassert.match")

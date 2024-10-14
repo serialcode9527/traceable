@@ -1,5 +1,5 @@
 local next = next
-
+local unpack = table.unpack
 local traceable = {}
 local _M = traceable
 
@@ -39,9 +39,9 @@ local setter_cache = {}
 local function compile_normalized_property(field_path)
     local getter, setter = getter_cache[field_path], setter_cache[field_path]
     if not getter then
-        getter = assert(loadstring(getter_template:format(field_path)))()
+        getter = assert(load(getter_template:format(field_path)))()
         getter_cache[field_path] = getter
-        setter = assert(loadstring(setter_template:format(field_path)))()
+        setter = assert(load(setter_template:format(field_path)))()
         setter_cache[field_path] = setter
     end
     return getter, setter
