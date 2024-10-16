@@ -31,7 +31,7 @@ describe("basic tests -", function()
     end)
 
     local function dump(t)
-        if not traceable.is(t) then
+        if not traceable.is_traced(t) then
             return t
         end
 
@@ -46,7 +46,7 @@ describe("basic tests -", function()
         test("check type", function ()
             assert.is_truthy(traceable.is_traceable(raw_data))
             assert.is_falsy(traceable.is_traceable(object))
-            assert.is_truthy(traceable.is(data))
+            assert.is_truthy(traceable.is_traced(data))
         end)
 
         it("should be dirty before commit", function ()
@@ -59,18 +59,18 @@ describe("basic tests -", function()
 
         test("sub table should be convert to traceable", function ()
             assert.are_not.equal(raw_data.list_value, data.list_value)
-            assert.is_truthy(traceable.is(data.list_value))
+            assert.is_truthy(traceable.is_traced(data.list_value))
 
             assert.are_not.equal(raw_data.nested_table_value, data.nested_table_value)
-            assert.is_truthy(traceable.is(data.nested_table_value))
+            assert.is_truthy(traceable.is_traced(data.nested_table_value))
 
             assert.are_not.equal(raw_data.nested_table_value.nested_table_value, data.nested_table_value.nested_table_value)
-            assert.is_truthy(traceable.is(data.nested_table_value.nested_table_value))
+            assert.is_truthy(traceable.is_traced(data.nested_table_value.nested_table_value))
         end)
 
         test("but sub table with metatable should not be convert to traceable", function ()
             assert.are.equal(raw_data.object_value, data.object_value)
-            assert.is_falsy(traceable.is(data.object_value))
+            assert.is_falsy(traceable.is_traced(data.object_value))
         end)
 
         it("should be same with raw_data after commit", function ()

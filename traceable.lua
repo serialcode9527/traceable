@@ -85,7 +85,7 @@ set = function (t, k, v, force)
     local stage = t._stage
     local u = stage[k]
     if _M.is_traceable(v) then
-        if _M.is(u) then
+        if _M.is_traced(u) then
             for k in next, u._stage do
                 if v[k] == nil then
                     u[k] = nil
@@ -111,7 +111,7 @@ set = function (t, k, v, force)
     end
 end
 
-function _M.is(t)
+function _M.is_traced(t)
     local mt = getmetatable(t)
     return type(mt) == "table" and mt.__newindex == set
 end
@@ -134,7 +134,7 @@ end
 
 function _M.mark_changed(t, k)
     local v = t[k]
-    if _M.is(v) then
+    if _M.is_traced(v) then
         mark_dirty(v)
     else
         set(t, k, v, true)
@@ -227,7 +227,7 @@ local function _commit(keep_dirty, t, sub, changed, newestversion, lastversion, 
     local has_inner_changed = false
     for k, v in next, sub._stage do
         has_inner_changed = false
-        if _M.is(v) and not v.ignored then
+        if _M.is_traced(v) and not v.ignored then
             if v.opaque then
                 has_inner_changed = _commit(keep_dirty, t, v)
                 if has_inner_changed then
